@@ -2,9 +2,16 @@
 #' 
 #' @description
 #' Consulta de series de datos disponibles en el API del BCRP según fecha, nombre, conjunto de datos, entre otros
-#' 
+#' @import jsonlite
+#' @import tidyverse
+#' @import zoo
+#' @import haven
+#' @import httr
+#' @import data.table
+#' @import janitor
 #' @return Base de datos de todas las series disponibles en el API del BCRP
 #' @examples
+
 #' diccionario_bcrp() # Retorno de toda la serie
 #' @export
 diccionario_bcrp <- function() {
@@ -32,6 +39,13 @@ diccionario_bcrp <- function() {
 #' @param fechaini Periodo inicial de consulta
 #' @param fechafin Periodo final de la consulta
 #' @param labels Permite incluir etiquetado a los indicadores de c("default", "manual","no"). En la opción "manual", el usuario puede añadir los labels de las variables en argumento complementario labs_opcional. Cuando la opción "no" se selecciona, no se incluyen labels.
+#' @import jsonlite
+#' @import tidyverse
+#' @import zoo
+#' @import haven
+#' @import httr
+#' @import data.table
+#' @import janitor
 #' @return Retorna una base de datos con la(s) serie(s) en el periodo escogido.
 #' @examples
 #' bcrp_data(series = c("PN01728AM"), fechaini = "2004-2", fechafin = "2019-12") # Mensual
@@ -149,7 +163,7 @@ bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcio
               T ~ paste("20", anio, sep = "")
             )
           ),
-          fecha = as.yearqtr(paste(anio, " Q", trim))
+          fecha = zoo::as.yearqtr(paste(anio, " Q", trim))
         )
       
     } else if (periodo == "A") {
