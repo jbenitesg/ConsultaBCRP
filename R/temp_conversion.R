@@ -46,6 +46,7 @@ diccionario_bcrp <- function() {
 #' @import httr
 #' @import data.table
 #' @import janitor
+#' @import lubridate
 #' @return Retorna una base de datos con la(s) serie(s) en el periodo escogido.
 #' @examples
 #' bcrp_data(series = c("PN01728AM"), fechaini = "2004-2", fechafin = "2019-12") # Mensual

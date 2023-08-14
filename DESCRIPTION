@@ -10,4 +10,4 @@ Encoding: UTF-8
 Language: es
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Imports: jsonlite, tidyverse, zoo, haven, httr, data.table, janitor
+Imports: jsonlite, tidyverse, lubridate, zoo, haven, httr, data.table, janitor
