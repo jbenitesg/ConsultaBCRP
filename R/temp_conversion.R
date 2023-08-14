@@ -7,7 +7,7 @@
 #' @import zoo
 #' @import haven
 #' @import httr
-#' @import data.table
+#' @importFrom data.table fread
 #' @import janitor
 #' @return Base de datos de todas las series disponibles en el API del BCRP
 #' @examples
@@ -44,7 +44,6 @@ diccionario_bcrp <- function() {
 #' @import zoo
 #' @import haven
 #' @import httr
-#' @import data.table
 #' @import janitor
 #' @import lubridate
 #' @return Retorna una base de datos con la(s) serie(s) en el periodo escogido.
@@ -60,7 +59,7 @@ bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcio
   meses <- data.frame(
     mes = lubridate::month(
       lubridate::ymd(080101) + 
-        lubridate::months(0:11),
+        months(0:11),
                 label = TRUE
     ),
     mesid = c(1:12)

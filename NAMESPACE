@@ -2,7 +2,6 @@
 
 export(bcrp_data)
 export(diccionario_bcrp)
-import(data.table)
 import(haven)
 import(httr)
 import(janitor)
@@ -10,3 +9,4 @@ import(jsonlite)
 import(lubridate)
 import(tidyverse)
 import(zoo)
+importFrom(data.table,fread)
