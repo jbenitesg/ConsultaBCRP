@@ -55,17 +55,6 @@ diccionario_bcrp <- function() {
 #' @export
 bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcional = NULL) {
   
-  # Periodo
-  meses <- data.frame(
-    mes = lubridate::month(
-      lubridate::ymd(080101) + 
-        months(0:11),
-                label = TRUE
-    ),
-    mesid = c(1:12)
-  ) %>%
-    dplyr::mutate(mes = gsub("Set", "Sep", mes))
-  
   link <- "https://estadisticas.bcrp.gob.pe/estadisticas/series/api"
   k <- 1
   temp <- list()
@@ -73,7 +62,7 @@ bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcio
     # Mayúsculas
     serie = toupper(serie)
     # Enlace funcional
-    full_link <- paste(link, serie, "json", fechaini, fechafin, sep = "/")
+    full_link <- paste(link, serie, "json", fechaini, fechafin, "ing", sep = "/")
     #Procesamos
     tp <- jsonlite::fromJSON(
       readLines(
@@ -81,10 +70,8 @@ bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcio
         warn = "F",
         encoding = "Latin-1"
       )
-    ) %>%
-      as.data.frame(row.names = NULL) %>%
-      dplyr::select(contains("periods")) %>%
-      dplyr::rename_with(~ tolower(gsub("periods.", "", .x, fixed = T))) %>%
+    )$periods %>%
+      as.data.frame(row.names = NULL)  %>%
       dplyr::mutate(across(
         !contains("name"),
         ~ as.numeric(.x)
@@ -105,7 +92,7 @@ bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcio
     else if (labels == "no") {
       tp <- tp
     }
-  
+    
     # Asignación de periodo
     periodo = dplyr::case_when(
       # Anual
@@ -123,8 +110,8 @@ bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcio
       # Perido diario
       tp <- tp %>%
         tidyr::separate_wider_delim(fecha,
-                             delim = ".",
-                             names = c("dia", "mes", "anio")
+                                    delim = ".",
+                                    names = c("dia", "mes", "anio")
         ) %>%
         dplyr::mutate(
           dia = as.numeric(dia),
@@ -145,12 +132,7 @@ bcrp_data <- function(series, fechaini, fechafin, labels = "default", labs_opcio
     } else if (periodo == "M") {
       # Periodo mensual
       tp <- tp %>%
-        tidyr::separate_wider_delim(fecha,
-                             delim = ".",
-                             names = c("mes", "anio")
-        ) %>%
-        dplyr::left_join(meses, by = c("mes")) %>%
-        dplyr::mutate(fecha = make_date(year = anio, month = mesid))
+        dplyr::mutate(fecha = lubridate::my(fecha))
     } else if (periodo == "T") {
       # Periodo trimestral
       tp <- tp %>%
